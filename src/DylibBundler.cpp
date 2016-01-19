@@ -86,13 +86,15 @@ void collectDependencies(std::string filename)
     collectDependencies(filename, lines);
        
     std::cout << "."; fflush(stdout);
-    
+  	
     const int line_amount = lines.size();
     for(int n=0; n<line_amount; n++)
     {
         std::cout << "."; fflush(stdout);
         if(lines[n][0] != '\t') continue; // only lines beginning with a tab interest us
         if( lines[n].find(".framework") != std::string::npos ) continue; //Ignore frameworks, we can not handle them
+        if( lines[n].find("@rpath") != std::string::npos ) continue; //Ignore frameworks, we can not handle them
+        if( lines[n].find("@loader_path") != std::string::npos ) continue; //Ignore frameworks, we can not handle them
         
         addDependency( // trim useless info, keep only library name
                        lines[n].substr(1, lines[n].rfind(" (") - 1)
@@ -119,6 +121,8 @@ void collectSubDependencies()
             {
                 if(lines[n][0] != '\t') continue; // only lines beginning with a tab interest us
                 if( lines[n].find(".framework") != std::string::npos ) continue; //Ignore frameworks, we can not handle them
+                if( lines[n].find("@rpath") != std::string::npos ) continue; //Ignore frameworks, we can not handle them
+                if( lines[n].find("@loader_path") != std::string::npos ) continue; //Ignore frameworks, we can not handle them
                 
                 addDependency( // trim useless info, keep only library name
                                lines[n].substr(1, lines[n].rfind(" (") - 1) 
